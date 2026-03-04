@@ -21,6 +21,12 @@
 </style>
 
 <form method="POST" action="{{ route('approvals.store') }}" enctype="multipart/form-data">
+    @php
+        $currentOptions = is_array($approval->sale_type_options) 
+            ? $approval->sale_type_options 
+            : json_decode($approval->sale_type_options ?? '[]', true);
+    @endphp
+
     @csrf
     @if ($errors->any())
         <div class="alert alert-danger">

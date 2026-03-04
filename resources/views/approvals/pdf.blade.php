@@ -104,7 +104,7 @@
 <body>
 <div class="container">
     @php
-        $currentOptions = is_array($approval->sale_type_options) 
+        $selectedTypes = is_array($approval->sale_type_options) 
             ? $approval->sale_type_options 
             : json_decode($approval->sale_type_options ?? '[]', true);
     @endphp
@@ -146,9 +146,8 @@
     <div class="sale-type-section" style="border: 1px solid black; padding: 10px;">
         ประเภทการขาย 
             <span>
-                [{{ in_array('GE', $selectedTypes) ? '✓' : ' ' }}] GE 
-                จำนวน <b>{{ number_format($approval->amount_ge ?? 0, 2) }}</b> บาท
-            </span><br>
+                [{{ in_array('GE', $selectedTypes) ? '✓' : ' ' }}] GE</span>
+                จำนวน <b>{{ number_format($approval->amount_ge ?? 0, 2) }}</b> บาท<br>
 
             <span>[{{ in_array('RETENTION', $selectedTypes) ? '✓' : ' ' }}] Retention</span> 
                 จำนวน <b>{{ number_format($approval->amount_retention ?? 0, 2) }}</b> บาท<br>
@@ -156,10 +155,10 @@
             <span>[{{ in_array('FARMER', $selectedTypes) ? '✓' : ' ' }}] เกษตรกร</span> 
                 จำนวน <b>{{ number_format($approval->amount_farmer ?? 0, 2) }}</b> บาท<br>
                 
-            <span>[{{ in_array('WELCOME', $selectedTypes) ? '✓' : ' ' }}] Welcome</span> 
+            <span>[{{ in_array('Welcome', $selectedTypes) ? '✓' : ' ' }}] Welcome</span> 
                 จำนวน <b>{{ number_format($approval->amount_welcome ?? 0, 2) }}</b> บาท
-        </div>
-    </div>                Fleet <span class="dotted-line">{{ $approval->fleet_amount ?? '-' }} </span> บาท 
+    </div>      
+                Fleet <span class="dotted-line">{{ $approval->fleet_amount ?? '-' }} </span> บาท 
                 หักประกัน <span class="dotted-line">{{ $approval->insurance_deduct ?? '-' }} </span> บาท 
                 ใช้จริง <span class="dotted-line">{{ $approval->insurance_used ?? '-' }} </span> บาท<br>
                 Kickback <span class="dotted-line">{{ $approval->kickback_amount ?? '-' }} </span> บาท<br>
