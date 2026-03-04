@@ -22,14 +22,15 @@ class ApprovalExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
                 $approval->created_at->format('d/m/Y'), // วันที่
                 $approval->customer_name,
                 $approval->customer_phone,
+                $approval->customer_email,
                 $approval->car_model,
                 $approval->car_color,
                 number_format($approval->car_price, 2),
                 number_format($approval->down_amount, 2),
                 number_format($approval->finance_amount, 2),
                 $approval->installment_months ?? '-' . ' งวด',
-                $approval->status, // สถานะอนุมัติ
-                $approval->sale_name ?? '-', // ชื่อเซลล์ (ถ้ามี)
+                $approval->status, 
+                $approval->sales_name ?? '-',
             ];
         });
     }
@@ -38,10 +39,11 @@ class ApprovalExport implements FromCollection, WithHeadings, ShouldAutoSize, Wi
     public function headings(): array
     {
         return [
-            'เลขที่', 
+            'NO.', 
             'วันที่ทำรายการ', 
             'ชื่อลูกค้า', 
-            'เบอร์โทร', 
+            'เบอร์โทร',
+            'อีเมล', 
             'รุ่นรถ', 
             'สีรถ', 
             'ราคารถ', 

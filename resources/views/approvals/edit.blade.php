@@ -3,6 +3,12 @@
 @section('content')
 
     <div class="d-flex justify-content-between mb-3">
+        @php
+            $currentOptions = is_array($approval->sale_type_options) 
+                ? $approval->sale_type_options 
+                : json_decode($approval->sale_type_options ?? '[]', true);
+        @endphp
+
         <button type="button" onclick="history.back()" class="btn btn-secondary">
             ← ย้อนกลับ
         </button>
@@ -46,19 +52,19 @@
     <div class="section-title">ข้อมูลลูกค้า</div>
 
     <div class="mb-3">
-        <label class="form-label">ชื่อลูกค้า</label>
+        <label class="form-label">ชื่อลูกค้า<span class="text-danger">*</span></label>
         <input type="text" class="form-control" name="customer_name" required
             value="{{ old('customer_name', $approval->customer_name) }}">
     </div>
 
     <div class="row">
         <div class="col-6 mb-3">
-            <label class="form-label">ที่อยู่</label>
+            <label class="form-label">ที่อยู่<span class="text-danger">*</span></label>
             <input type="text" class="form-control" name="customer_address" required
             value="{{ old('customer_address', $approval->customer_address) }}">
         </div>
         <div class="col-6 mb-3">
-            <label class="form-label">ตำบล</label>
+            <label class="form-label">ตำบล<span class="text-danger">*</span></label>
             <input type="text" class="form-control" name="customer_subdistrict" required
             value="{{ old('customer_subdistrict', $approval->customer_subdistrict) }}">
         </div>
@@ -66,25 +72,25 @@
 
     <div class="row">
         <div class="col-6 mb-3">
-            <label class="form-label">อำเภอ</label>
+            <label class="form-label">อำเภอ<span class="text-danger">*</span></label>
             <input type="text" class="form-control" name="customer_district" required
                 value="{{ old('customer_district', $approval->customer_district) }}">
         </div>
         <div class="col-6 mb-3">
-            <label class="form-label">จังหวัด</label>
+            <label class="form-label">จังหวัด<span class="text-danger">*</span></label>
             <input type="text" class="form-control" name="customer_province" required
                 value="{{ old('customer_province', $approval->customer_province) }}">
         </div>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">เบอร์โทร</label>
+        <label class="form-label">เบอร์โทร<span class="text-danger">*</span></label>
         <input type="text" class="form-control" name="customer_phone" required
             value="{{ old('customer_phone', $approval->customer_phone) }}">
     </div>
 
     <div class="mb-3">
-        <label class="form-label">อีเมล</label>
+        <label class="form-label">อีเมล<span class="text-danger">*</span></label>
         <input type="text" class="form-control" name="customer_email" required
         value="{{ old('customer_email', $approval->customer_email) }}">
     </div>
@@ -92,14 +98,14 @@
     {{-- 2. ข้อมูลรถ --}}
     <div class="section-title">ข้อมูลรถ</div>
         <div class="mb-3">
-            <label class="form-label">รุ่นรถ</label>
+            <label class="form-label">รุ่นรถ<span class="text-danger">*</span></label>
             <input type="text" class="form-control" name="car_model" required
             value="{{ old('car_model', $approval->car_model) }}">
         </div>
 
     <div class="row">
         <div class="col-6 mb-3">
-            <label class="form-label">สี</label>
+            <label class="form-label">สี<span class="text-danger">*</span></label>
             <input type="text" class="form-control" name="car_color" required
                 value="{{ old('car_color', $approval->car_color) }}">
         </div>
@@ -163,7 +169,7 @@
         
         <div class="mb-3">
             <label class="form-label">เลขสต๊อก</label>
-            <input type="number" step="0.01" class="form-control" name="stock_number"
+            <input type="text" step="0.01" class="form-control" name="stock_number"
                 value="{{ old('stock_number', $approval->stock_number) }}">
         </div>
 
@@ -189,53 +195,50 @@
         </div>
     </div>
     
+
     <div class="row">
         <div class="col-6 mb-3">
             <label class="form-label">ประเภทการขาย</label><br>
-            <input type="checkbox" name="options1[]" 
-                value="GE"{{ (is_array(old('options1', $approval->sale_type_options)) 
-                && in_array('GE', old('sale_type_options', $approval->sale_type_options))) ? 'checked' : '' }}> GE<br>       
+            <input type="checkbox" name="sale_types[]" value="GE"
+                {{ in_array('GE', old('sale_types', $currentOptions)) ? 'checked' : '' }}> GE
         </div>
         <div class="col-6 mb-3">
-            <label class="form-label">จำนวน (บาท)</label><br>
+            <label class="form-label">จำนวน (บาท)</label>
             <input type="number" step="0.01" class="form-control" name="amount_ge" 
-                value="{{ old('amount_ge', $approval->amount_ge ?? '') }}"> {{-- ต้องแก้ name ให้ตรง DB --}}
+                value="{{ old('amount_ge', $approval->amount_ge) }}">
         </div>
 
         <div class="col-6 mb-3">
-            <input type="checkbox" name="options2[]" 
-                value="RETENEION"{{ (is_array(old('options', $approval->options)) 
-                && in_array('RETENTION', old('options', $approval->options))) ? 'checked' : '' }}> RETENTION 
+            <input type="checkbox" name="sale_types[]" value="RETENTION"
+                {{ in_array('RETENTION', old('sale_types', $currentOptions)) ? 'checked' : '' }}> RETENTION
         </div>
         <div class="col-6 mb-3">
             <label class="form-label">จำนวน (บาท)</label>
             <input type="number" step="0.01" class="form-control" name="amount_retention"
-            value="{{ old('amount_retention', $approval->amount_retention ?? '') }}"> {{-- ต้องแก้ name ให้ตรง DB --}}
+                value="{{ old('amount_retention', $approval->amount_retention) }}">
         </div>
 
         <div class="col-6 mb-3">
-            <input type="checkbox" name="options3[]" 
-                value="เกตรกร"{{ (is_array(old('options3', $approval->options)) 
-                && in_array('เกตรกร', old('options', $approval->options))) ? 'checked' : '' }}"> เกตรกร
+            <input type="checkbox" name="sale_types[]" value="FARMER"
+                {{ in_array('FARMER', old('sale_types', $currentOptions)) ? 'checked' : '' }}> เกษตรกร
         </div>
         <div class="col-6 mb-3">
             <label class="form-label">จำนวน (บาท)</label>
             <input type="number" step="0.01" class="form-control" name="amount_farmer"
-            value="{{ old('amount_farmer', $approval->amount_farmer ?? '') }}"> {{-- ต้องแก้ name ให้ตรง DB --}}
+                value="{{ old('amount_farmer', $approval->amount_farmer) }}">
         </div>
 
         <div class="col-6 mb-3">
-            <input type="checkbox" name="options4[]" 
-                value="Welcome"{{ (is_array(old('options4', $approval->options)) 
-                && in_array('Welcome', old('options', $approval->options))) ? 'checked' : '' }}> Welcome
+            <input type="checkbox" name="sale_types[]" value="Welcome"
+                {{ in_array('Welcome', old('sale_types', $currentOptions)) ? 'checked' : '' }}> Welcome
         </div>
         <div class="col-6 mb-3">
             <label class="form-label">จำนวน (บาท)</label>
             <input type="number" step="0.01" class="form-control" name="amount_welcome"
-            value="{{ old('amount_welcome', $approval->amount_welcome ?? '') }}"> {{-- ต้องแก้ name ให้ตรง DB --}}
+                value="{{ old('amount_welcome', $approval->amount_welcome) }}">
         </div>
     </div>
-
+    
     <div class="mb-3">
             <input type="checkbox" name="options5[]" value="Fleet">
             <label class="form-label">Fleet (บาท)</label>

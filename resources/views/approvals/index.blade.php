@@ -107,7 +107,7 @@
     <hr class="my-5">
     <h6 class="fw-bold mb-3 text-secondary">
         <i class="fas fa-exclamation-circle"></i> 
-        {{ $isAdmin ? 'งานที่ต้องแก้ไข (Reject)' : 'งานร่างและงานที่ถูกตีกลับ' }}
+        {{ $isAdmin ? 'งานที่ต้องแก้ไข (Reject)' :__('messages.text') }}
     </h6>   
         
     
@@ -117,7 +117,7 @@
             <thead class="table-light text-center">
                 <tr>
                     <th>#</th>
-                    <th>GroupID</th>
+                    <th>{{ __('messages.GroupID') }}</th>
                     <th>{{ __('messages.car_model') }}</th>
                     <th>{{ __('messages.sales_name') }}</th>
                     <th>{{ __('messages.status') }}</th>

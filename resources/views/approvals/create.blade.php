@@ -170,7 +170,7 @@
         </div>
         <div class="mb-3">
             <label class="form-label">เลขสต๊อก</label>
-            <input type="number" step="0.01" class="form-control" name="stock_number">
+            <input type="text" step="0.01" class="form-control" name="stock_number">
         </div>
 
     <div class="section-title"></div></br>
@@ -197,32 +197,31 @@
     <div class="row">
         <div class="col-6 mb-3">
             <label class="form-label">ประเภทการขาย</label><br>
-            <input type="checkbox" name="options1[]" value="GE"> GE<br>
+            <input type="checkbox" name="sale_types[]" value="GE"> GE
         </div>
         <div class="col-6 mb-3">
-            <label class="form-label">จำนวน (บาท)</label><br>
-            <input type="number" step="0.01" class="form-control" name="amount_ge">
+            <input type="number" step="0.01" class="form-control" name="amount_ge" placeholder="จำนวน (บาท)">
+        </div>
+
+        <div class="col-6 mb-3">
+            <input type="checkbox" name="sale_types[]" value="RETENTION"> Retention
         </div>
         <div class="col-6 mb-3">
-            <input type="checkbox" name="options2[]" value="RETENEION"> RETENTION
+            <input type="number" step="0.01" class="form-control" name="amount_retention" placeholder="จำนวน (บาท)">
+        </div>
+
+        <div class="col-6 mb-3">
+            <input type="checkbox" name="sale_types[]" value="FARMER"> เกษตรกร
         </div>
         <div class="col-6 mb-3">
-            <label class="form-label">จำนวน (บาท)</label>
-            <input type="number" step="0.01" class="form-control" name="amount_reteneion]">
+            <input type="number" step="0.01" class="form-control" name="amount_farmer" placeholder="จำนวน (บาท)">
+        </div>
+
+        <div class="col-6 mb-3">
+            <input type="checkbox" name="sale_types[]" value="Welcome"> Welcome
         </div>
         <div class="col-6 mb-3">
-            <input type="checkbox" name="options3[]" value="เกตรกร"> เกตรกร
-        </div>
-        <div class="col-6 mb-3">
-            <label class="form-label">จำนวน (บาท)</label>
-            <input type="number" step="0.01" class="form-control" name="amount_farmer">
-        </div>
-        <div class="col-6 mb-3">
-            <input type="checkbox" name="options4[]" value="Welcome"> Welcome
-        </div>
-        <div class="col-6 mb-3">
-            <label class="form-label">จำนวน (บาท)</label>
-            <input type="number" step="0.01" class="form-control" name="amount_welcome">
+            <input type="number" step="0.01" class="form-control" name="amount_welcome" placeholder="จำนวน (บาท)">
         </div>
     </div>
 

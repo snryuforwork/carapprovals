@@ -169,6 +169,8 @@ class ApprovalController extends Controller
                 } catch (\Exception $e) {}
             }
 
+            $approval->sale_type_options = json_encode($request->input('sale_types', []), JSON_UNESCAPED_UNICODE);
+
                 return redirect()->route('approvals.index')->with('success', 
                         ($inputStatus === 'Draft' ? 'บันทึกร่างเรียบร้อย' : 'ส่งใบขออนุมัติเรียบร้อย')
                 );
@@ -296,19 +298,25 @@ class ApprovalController extends Controller
             ];
 
                 $changes = [];
-                $fillableFields = $oldVersion->getFillable();
                 
             // วนลูปเช็คค่าเก่า vs ค่าใหม่
             foreach ($fieldsToCheck as $field => $label) {
-                $newValue = $request->input($field);
-                $oldValue = $oldVersion->$field;
+                $oldValue = $oldVersion->$field ?? null;
+                
+            if ($field === 'sale_type_options') {
+                $newValue = $request->sale_types ?? []; 
+            } else {
+                $newValue = $request->$field ?? null;
+            }
 
-                // ถ้าค่าไม่เท่ากัน ให้เก็บลง Array (แปลงเป็น String เพื่อเปรียบเทียบง่ายๆ)
-                if ((string)$newValue !== (string)$oldValue) {
+                $val1 = is_array($newValue) ? json_encode($newValue, JSON_UNESCAPED_UNICODE) : (string)$newValue;
+                $val2 = is_array($oldValue) ? json_encode($oldValue, JSON_UNESCAPED_UNICODE) : (string)$oldValue;
+
+                if ($val1 !== $val2) {
                     $changes[] = [
                         'field' => $label,
-                        'old' => $oldValue,
-                        'new' => $newValue
+                        'old' => $val2, // แสดงค่าเก่าในรูปแบบ string
+                        'new' => $val1  // แสดงค่าใหม่ในรูปแบบ string
                     ];
                 }
             }
@@ -317,6 +325,13 @@ class ApprovalController extends Controller
             $newVersion = $oldVersion->replicate(); 
             $newVersion->fill($request->all());
             
+            // *** ต้องบันทึกค่าประเภทการขาย (JSON) ลงใน Model ใหม่ด้วย ***
+            if($request->has('sale_types')) {
+                $newVersion->sale_type_options = json_encode($request->sale_types, JSON_UNESCAPED_UNICODE);
+            } else {
+                $newVersion->sale_type_options = json_encode([]);
+            }
+
             $newVersion->group_id = $oldVersion->group_id; 
             $newVersion->version = $oldVersion->version + 1;
             $newVersion->status = 'Waiting'; 
@@ -325,7 +340,6 @@ class ApprovalController extends Controller
             // --- ส่ง Email แจ้งเตือน (Update) ---
             // ส่งเฉพาะเมื่อมีการแก้ไขข้อมูลสำคัญ
             if (count($changes) > 0) {
-        
                 // ลบ try...catch ออกเช่นกัน:
                 $emails = ['Admin@example.com'];
                 Mail::to($emails)->send(new ApprovalMail($newVersion, 'update', $changes));
